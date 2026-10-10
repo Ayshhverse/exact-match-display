@@ -34,9 +34,9 @@ function VaultPage() {
   };
 
   const add = () => {
-    if (!image && !note.trim() && !link.trim()) return toast.error("Add a screenshot, link or note first");
+    if (!image && !note.trim() && !link.trim()) { toast.error("Add a screenshot, link or note first"); return; }
     const item: Evidence = { id: makeId(note + link), createdAt: new Date().toISOString(), platform, note: note.trim(), link: link.trim() || undefined, image };
-    try { update([item, ...items]); } catch { return toast.error("Storage full — try a smaller screenshot"); }
+    try { update([item, ...items]); } catch { toast.error("Storage full — try a smaller screenshot"); return; }
     setImage(undefined); setNote(""); setLink("");
     toast.success(`Saved as ${item.id}`);
   };

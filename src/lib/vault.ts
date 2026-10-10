@@ -6,9 +6,9 @@ export type Evidence = {
   createdAt: string;
   platform: Platform;
   note: string;
-  link?: string;
-  image?: string; // data URL
-  text?: string;
+  link?: string | undefined;
+  image?: string | undefined;
+  text?: string | undefined;
 };
 
 const KEY = "safeher-vault";
