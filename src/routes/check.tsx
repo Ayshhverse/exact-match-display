@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { AlertTriangle, Save, HelpCircle, Sparkles } from "lucide-react";
 import { toast } from "sonner";
-import { analyze, EXAMPLES, type Analysis } from "@/lib/detect";
+import { analyze, highlightSegments, EXAMPLES, type Analysis } from "@/lib/detect";
 import { addEvidence } from "@/lib/vault";
 
 export const Route = createFileRoute("/check")({
@@ -63,8 +63,37 @@ function CheckPage() {
             </div>
           </div>
           <div className="p-6">
-            <div className="text-sm text-muted-foreground">Threat type</div>
-            <div className="text-xl font-semibold">{result.threat}</div>
+            <div className="flex items-end justify-between">
+              <div>
+                <div className="text-sm text-muted-foreground">Risk score</div>
+                <div className="text-xl font-semibold">{result.score} / 100</div>
+              </div>
+              <div className="text-right">
+                <div className="text-sm text-muted-foreground">Threat type</div>
+                <div className="text-xl font-semibold">{result.threat}</div>
+              </div>
+            </div>
+            <div className="mt-3 h-3 w-full overflow-hidden rounded-full bg-muted">
+              <div
+                className={`h-full rounded-full transition-all duration-500 ${RISK_STYLE[result.risk]}`}
+                style={{ width: `${Math.max(result.score, 3)}%` }}
+              />
+            </div>
+            <div className="mt-1 flex justify-between text-xs text-muted-foreground">
+              <span>0 · safe</span><span>34 · caution</span><span>67 · danger</span><span>100</span>
+            </div>
+
+            <h3 className="mt-6 font-semibold">Message with highlights</h3>
+            <div className="mt-2 rounded-xl border border-border bg-muted/50 p-4 text-sm leading-relaxed whitespace-pre-wrap">
+              {highlightSegments(text, result.matches).map((s, i) =>
+                s.hit ? (
+                  <mark key={i} className="rounded bg-risk-high/25 px-0.5 text-foreground">{s.text}</mark>
+                ) : (
+                  <span key={i}>{s.text}</span>
+                )
+              )}
+            </div>
+
             <h3 className="mt-6 font-semibold">Why this is risky</h3>
             <ul className="mt-2 space-y-2">
               {result.reasons.map((r) => (
