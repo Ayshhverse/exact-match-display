@@ -162,11 +162,12 @@ export function highlightSegments(
 ): { text: string; hit: boolean }[] {
   if (matches.length === 0) return [{ text, hit: false }];
   const escaped = matches.map((m) => m.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
-  const re = new RegExp(`(${escaped.join("|")})`, "gi");
+  const splitRe = new RegExp(`(${escaped.join("|")})`, "gi");
+  const testRe = new RegExp(`^(${escaped.join("|")})$`, "i");
   return text
-    .split(re)
+    .split(splitRe)
     .filter((s) => s.length > 0)
-    .map((s) => ({ text: s, hit: re.test(s) }));
+    .map((s) => ({ text: s, hit: testRe.test(s) }));
 }
 
 export const EXAMPLES = [
