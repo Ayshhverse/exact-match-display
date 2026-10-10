@@ -32,7 +32,7 @@ const SITUATIONS: Record<string, string[]> = {
 
 function HelpPage() {
   const { items } = useVault();
-  const [situation, setSituation] = useState(Object.keys(SITUATIONS)[0]);
+  const [situation, setSituation] = useState<string>("Sextortion/blackmail");
   const [done, setDone] = useState<Record<number, boolean>>({});
   const [draft, setDraft] = useState("");
 
@@ -65,7 +65,7 @@ Date: ${new Date().toLocaleDateString("en-IN")}`);
   };
 
   const copy = async () => { await navigator.clipboard.writeText(draft); toast.success("Complaint copied"); };
-  const steps = SITUATIONS[situation];
+  const steps: string[] = SITUATIONS[situation] ?? [];
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-12">
